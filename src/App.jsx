@@ -1,10 +1,11 @@
 import "./App.css";
+import { TodosList } from "./components/TodosList";
 
 function App() {
   return (
     <>
       <div>
-        <h1>Todos List</h1>
+        <TodosList />
       </div>
     </>
   );
