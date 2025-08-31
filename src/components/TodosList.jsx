@@ -14,22 +14,24 @@ export const TodosList = () => {
     e.preventDefault();
     const todoId = uuidv1();
     const currentTimestamp = Date.now();
-    setTodos([
-      ...todos,
-      {
+    if (todoInput !== "") {
+      setTodos([
+        ...todos,
+        {
+          id: todoId,
+          timestamp: currentTimestamp,
+          todosTitle: todoInput,
+          isDone: false,
+        },
+      ]);
+      setTodoInput("");
+      set(ref(db, "todos/" + todoId), {
         id: todoId,
         timestamp: currentTimestamp,
         todosTitle: todoInput,
         isDone: false,
-      },
-    ]);
-    setTodoInput("");
-    set(ref(db, "todos/" + todoId), {
-      id: todoId,
-      timestamp: currentTimestamp,
-      todosTitle: todoInput,
-      isDone: false,
-    });
+      });
+    }
   };
 
   useEffect(() => {
