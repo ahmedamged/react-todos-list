@@ -5,21 +5,32 @@ import EditRoundedIcon from "@mui/icons-material/EditRounded";
 import DeleteForeverRoundedIcon from "@mui/icons-material/DeleteForeverRounded";
 import { todosContext } from "../contexts/TodosContext";
 import { TodoEditModal } from "./TodoEditModal";
+import db from "../firebase";
+import { update, ref, remove } from "firebase/database";
 
-export const TodoElement = ({ title, isDoneFlag }) => {
+export const TodoElement = ({ todoUniqueId, title, isDoneFlag }) => {
   const { todos, setTodos } = useContext(todosContext);
   const [isDone, setIsDone] = useState(isDoneFlag);
   const [isEditModalShown, setIsEditModalShown] = useState(false);
 
   const handleCheckClick = () => {
-    setIsDone((prev) => !prev);
+    const editedTodoRef = ref(db, "todos/" + todoUniqueId);
+    let newUpdatedTodo = {};
     const newTodos = [...todos];
     newTodos.map((todo) => {
-      if (todo.todosTitle === title) {
+      if (todo.id === todoUniqueId) {
         todo.isDone = !isDoneFlag;
+        newUpdatedTodo = { ...todo };
       }
     });
-    setTodos(newTodos);
+    update(editedTodoRef, newUpdatedTodo)
+      .then(() => {
+        setIsDone((prev) => !prev);
+        setTodos(newTodos);
+      })
+      .catch((error) => {
+        console.error("Error updating object:", error);
+      });
   };
 
   const handleEditClick = () => {
@@ -27,8 +38,15 @@ export const TodoElement = ({ title, isDoneFlag }) => {
   };
 
   const handleDeleteClick = () => {
-    const newTodos = [...todos];
-    setTodos(newTodos.filter((todo) => todo.todosTitle !== title));
+    const itemRef = ref(db, `todos/${todoUniqueId}`);
+    remove(itemRef)
+      .then(() => {
+        const newTodos = [...todos];
+        setTodos(newTodos.filter((todo) => todo.id !== todoUniqueId));
+      })
+      .catch((error) => {
+        console.error("Error deleting item:", error);
+      });
   };
 
   return (
@@ -70,6 +88,7 @@ export const TodoElement = ({ title, isDoneFlag }) => {
         <TodoEditModal
           setIsEditModalShown={setIsEditModalShown}
           title={title}
+          todoUniqueId={todoUniqueId}
         />
       ) : null}
     </>

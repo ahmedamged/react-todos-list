@@ -1,7 +1,9 @@
 import React, { useState, useContext } from "react";
 import { todosContext } from "../contexts/TodosContext";
+import db from "../firebase";
+import { ref, update } from "firebase/database";
 
-export const TodoEditModal = ({ setIsEditModalShown, title }) => {
+export const TodoEditModal = ({ todoUniqueId, setIsEditModalShown, title }) => {
   const [todoEdit, setTodoEdit] = useState("");
   const { todos, setTodos } = useContext(todosContext);
 
@@ -10,14 +12,23 @@ export const TodoEditModal = ({ setIsEditModalShown, title }) => {
   };
 
   const handleEditClick = () => {
+    const editedTodoRef = ref(db, "todos/" + todoUniqueId);
+    let newUpdatedTodo = {};
     const newTodos = [...todos];
     newTodos.map((todo) => {
-      if (todo.todosTitle === title) {
+      if (todo.id === todoUniqueId) {
         todo.todosTitle = todoEdit;
+        newUpdatedTodo = { ...todo };
       }
     });
-    setTodos(newTodos);
-    setIsEditModalShown((prev) => !prev);
+    update(editedTodoRef, newUpdatedTodo)
+      .then(() => {
+        setTodos(newTodos);
+        setIsEditModalShown((prev) => !prev);
+      })
+      .catch((error) => {
+        console.error("Error updating object:", error);
+      });
   };
 
   const handleCancelClick = () => {

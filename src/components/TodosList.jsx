@@ -1,22 +1,60 @@
 import React from "react";
 import { TodoElement } from "./TodoElement";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { todosContext } from "../contexts/TodosContext";
+import db from "../firebase";
+import { ref, set, query, orderByChild, onValue } from "firebase/database";
+import { v1 as uuidv1 } from "uuid";
 
 export const TodosList = () => {
-  const [todoId, setTodoId] = useState(4);
   const [todoInput, setTodoInput] = useState("");
-  const [todos, setTodos] = useState([
-    { id: 1, todosTitle: "Finish editing your posts", isDone: true },
-    { id: 2, todosTitle: "Add more motivational videos", isDone: false },
-    { id: 3, todosTitle: "Create more advanced articles", isDone: false },
-  ]);
+  const [todos, setTodos] = useState([]);
+  const todosRef = ref(db, "todos");
   const handleFormSubmit = (e) => {
     e.preventDefault();
-    setTodoId((prevId) => prevId + 1);
-    setTodos([...todos, { id: todoId, todosTitle: todoInput, isDone: false }]);
+    const todoId = uuidv1();
+    const currentTimestamp = Date.now();
+    setTodos([
+      ...todos,
+      {
+        id: todoId,
+        timestamp: currentTimestamp,
+        todosTitle: todoInput,
+        isDone: false,
+      },
+    ]);
     setTodoInput("");
+    set(ref(db, "todos/" + todoId), {
+      id: todoId,
+      timestamp: currentTimestamp,
+      todosTitle: todoInput,
+      isDone: false,
+    });
   };
+
+  useEffect(() => {
+    const todosRefOrdered = query(ref(db, "todos"), orderByChild("timestamp"));
+    const unsubscribe = onValue(todosRefOrdered, (snapshot) => {
+      const data = snapshot.val();
+      if (data) {
+        // Convert the Firebase object into an array
+        const newArray = Object.keys(data).map((key) => ({
+          id: key, // Use the Firebase key as an ID
+          ...data[key],
+        }));
+        newArray.sort(function (x, y) {
+          return x.timestamp - y.timestamp;
+        });
+        setTodos(newArray);
+      } else {
+        setTodos([]); // Handle empty data
+      }
+    });
+
+    // Clean up the listener when the component unmounts
+    return () => unsubscribe();
+  }, []);
+
   return (
     <>
       <todosContext.Provider value={{ todos, setTodos }}>
@@ -24,6 +62,7 @@ export const TodosList = () => {
           todos.map((todo) => (
             <TodoElement
               key={todo.id}
+              todoUniqueId={todo.id}
               title={todo.todosTitle}
               isDoneFlag={todo.isDone}
             />
