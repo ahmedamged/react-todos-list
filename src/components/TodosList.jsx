@@ -63,7 +63,15 @@ export const TodosList = () => {
   return (
     <>
       <todosContext.Provider value={{ todos, setTodos }}>
-        <Container maxWidth="sm">
+        <Container
+          maxWidth="sm"
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
           {todos.length >= 1 ? (
             todos.map((todo) => (
               <TodoElement

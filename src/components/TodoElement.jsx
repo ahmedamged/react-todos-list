@@ -61,14 +61,14 @@ export const TodoElement = ({ todoUniqueId, title, isDoneFlag }) => {
           padding: "0 20px",
           borderRadius: "10px",
           marginBottom: "10px",
-          minWidth: "450px",
-          maxWidth: "450px",
+          width: "90%",
         }}
       >
         <p
           style={{
             textDecoration: isDone ? "line-through" : "none",
             overflow: "hidden",
+            textAlign: "left",
           }}
         >
           {title}
