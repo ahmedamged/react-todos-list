@@ -5,8 +5,13 @@ import { todosContext } from "../contexts/TodosContext";
 import db from "../firebase";
 import { ref, update } from "firebase/database";
 
-export const TodoEditModal = ({ todoUniqueId, setIsEditModalShown, title }) => {
-  const [todoEdit, setTodoEdit] = useState("");
+export const TodoEditModal = ({
+  todoUniqueId,
+  setIsEditModalShown,
+  title,
+  userId,
+}) => {
+  const [todoEdit, setTodoEdit] = useState(title);
   const { todos, setTodos } = useContext(todosContext);
 
   const handleEditFormSubmit = (e) => {
@@ -14,7 +19,7 @@ export const TodoEditModal = ({ todoUniqueId, setIsEditModalShown, title }) => {
   };
 
   const handleEditClick = () => {
-    const editedTodoRef = ref(db, "todos/" + todoUniqueId);
+    const editedTodoRef = ref(db, `todos/${userId}/${todoUniqueId}`);
     let newUpdatedTodo = {};
     const newTodos = [...todos];
     newTodos.map((todo) => {

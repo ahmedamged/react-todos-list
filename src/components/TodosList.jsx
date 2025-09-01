@@ -8,11 +8,12 @@ import { todosContext } from "../contexts/TodosContext";
 import db from "../firebase";
 import { ref, set, query, orderByChild, onValue } from "firebase/database";
 import { v1 as uuidv1 } from "uuid";
+import { v4 as uuidv4 } from "uuid";
 
 export const TodosList = () => {
   const [todoInput, setTodoInput] = useState("");
   const [todos, setTodos] = useState([]);
-  const todosRef = ref(db, "todos");
+  const [userId, setUserId] = useState(null);
   const handleFormSubmit = (e) => {
     e.preventDefault();
     const todoId = uuidv1();
@@ -28,7 +29,7 @@ export const TodosList = () => {
         },
       ]);
       setTodoInput("");
-      set(ref(db, "todos/" + todoId), {
+      set(ref(db, `todos/${userId}/${todoId}`), {
         id: todoId,
         timestamp: currentTimestamp,
         todosTitle: todoInput,
@@ -38,8 +39,14 @@ export const TodosList = () => {
   };
 
   useEffect(() => {
-    const todosRefOrdered = query(ref(db, "todos"), orderByChild("timestamp"));
-    const unsubscribe = onValue(todosRefOrdered, (snapshot) => {
+    let storedUserId = localStorage.getItem("user_uuid");
+    if (!storedUserId) {
+      storedUserId = uuidv4();
+      localStorage.setItem("user_uuid", storedUserId);
+    }
+    setUserId(storedUserId);
+    const todosRef = ref(db, `todos/${userId}`);
+    const unsubscribe = onValue(todosRef, (snapshot) => {
       const data = snapshot.val();
       if (data) {
         // Convert the Firebase object into an array
@@ -58,7 +65,7 @@ export const TodosList = () => {
 
     // Clean up the listener when the component unmounts
     return () => unsubscribe();
-  }, []);
+  }, [userId]);
 
   return (
     <>
@@ -79,6 +86,7 @@ export const TodosList = () => {
                 todoUniqueId={todo.id}
                 title={todo.todosTitle}
                 isDoneFlag={todo.isDone}
+                userId={userId}
               />
             ))
           ) : (

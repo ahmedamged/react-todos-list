@@ -8,13 +8,13 @@ import { TodoEditModal } from "./TodoEditModal";
 import db from "../firebase";
 import { update, ref, remove } from "firebase/database";
 
-export const TodoElement = ({ todoUniqueId, title, isDoneFlag }) => {
+export const TodoElement = ({ todoUniqueId, title, isDoneFlag, userId }) => {
   const { todos, setTodos } = useContext(todosContext);
   const [isDone, setIsDone] = useState(isDoneFlag);
   const [isEditModalShown, setIsEditModalShown] = useState(false);
 
   const handleCheckClick = () => {
-    const editedTodoRef = ref(db, "todos/" + todoUniqueId);
+    const editedTodoRef = ref(db, `todos/${userId}/${todoUniqueId}`);
     let newUpdatedTodo = {};
     const newTodos = [...todos];
     newTodos.map((todo) => {
@@ -38,7 +38,7 @@ export const TodoElement = ({ todoUniqueId, title, isDoneFlag }) => {
   };
 
   const handleDeleteClick = () => {
-    const itemRef = ref(db, `todos/${todoUniqueId}`);
+    const itemRef = ref(db, `todos/${userId}/${todoUniqueId}`);
     remove(itemRef)
       .then(() => {
         const newTodos = [...todos];
@@ -100,6 +100,7 @@ export const TodoElement = ({ todoUniqueId, title, isDoneFlag }) => {
           setIsEditModalShown={setIsEditModalShown}
           title={title}
           todoUniqueId={todoUniqueId}
+          userId={userId}
         />
       ) : null}
     </>
