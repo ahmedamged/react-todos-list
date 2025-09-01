@@ -106,7 +106,6 @@ export const TodosList = () => {
             style={{
               background: "#a7d0d3",
               color: "#000000",
-              zIndex: "0",
             }}
           >
             Add
