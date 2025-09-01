@@ -1,4 +1,7 @@
 import React from "react";
+import Container from "@mui/material/Container";
+import TextField from "@mui/material/TextField";
+import Button from "@mui/material/Button";
 import { TodoElement } from "./TodoElement";
 import { useState, useEffect } from "react";
 import { todosContext } from "../contexts/TodosContext";
@@ -60,27 +63,45 @@ export const TodosList = () => {
   return (
     <>
       <todosContext.Provider value={{ todos, setTodos }}>
-        {todos.length >= 1 ? (
-          todos.map((todo) => (
-            <TodoElement
-              key={todo.id}
-              todoUniqueId={todo.id}
-              title={todo.todosTitle}
-              isDoneFlag={todo.isDone}
-            />
-          ))
-        ) : (
-          <h2>Try to add a new todo to your todo list</h2>
-        )}
+        <Container maxWidth="sm">
+          {todos.length >= 1 ? (
+            todos.map((todo) => (
+              <TodoElement
+                key={todo.id}
+                todoUniqueId={todo.id}
+                title={todo.todosTitle}
+                isDoneFlag={todo.isDone}
+              />
+            ))
+          ) : (
+            <h2>Try to add a new todo to your todo list</h2>
+          )}
+        </Container>
 
         <form onSubmit={handleFormSubmit} style={{ marginTop: "30px" }}>
-          <input
-            type="text"
+          <TextField
+            label="Add a Todo"
+            variant="outlined"
+            size="small"
+            helperText="Please enter your todo"
             value={todoInput}
             onChange={(e) => setTodoInput(e.target.value)}
-            style={{ padding: "10px", borderRadius: "10px", margin: "0 10px" }}
+            style={{
+              margin: "0 10px",
+              minWidth: "400px",
+            }}
           />
-          <button>Add</button>
+          <Button
+            variant="contained"
+            className="main-btn"
+            onClick={handleFormSubmit}
+            style={{
+              background: "#a7d0d3",
+              color: "#000000",
+            }}
+          >
+            Add
+          </Button>
         </form>
       </todosContext.Provider>
     </>

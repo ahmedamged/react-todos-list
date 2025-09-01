@@ -57,20 +57,31 @@ export const TodoElement = ({ todoUniqueId, title, isDoneFlag }) => {
           flexDirection: "row",
           alignItems: "center",
           justifyContent: "space-between",
+          background: "rgba(139, 185, 193, 0.5)",
+          padding: "0 20px",
+          borderRadius: "10px",
+          marginBottom: "10px",
+          minWidth: "450px",
+          maxWidth: "450px",
         }}
       >
-        <p style={{ textDecoration: isDone ? "line-through" : "none" }}>
+        <p
+          style={{
+            textDecoration: isDone ? "line-through" : "none",
+            overflow: "hidden",
+          }}
+        >
           {title}
         </p>
-        <div>
+        <div style={{ minWidth: "fit-content" }}>
           {isDone ? (
             <CheckCircleRoundedIcon
-              style={{ color: "green", cursor: "pointer", margin: "0 30px" }}
+              style={{ color: "green", cursor: "pointer", margin: "0 20px" }}
               onClick={handleCheckClick}
             />
           ) : (
             <CheckCircleOutlineOutlinedIcon
-              style={{ color: "green", cursor: "pointer", margin: "0 30px" }}
+              style={{ color: "green", cursor: "pointer", margin: "0 20px" }}
               onClick={handleCheckClick}
             />
           )}
@@ -79,7 +90,7 @@ export const TodoElement = ({ todoUniqueId, title, isDoneFlag }) => {
             onClick={handleEditClick}
           />
           <DeleteForeverRoundedIcon
-            style={{ color: "black", cursor: "pointer", margin: "0 30px" }}
+            style={{ color: "black", cursor: "pointer", marginLeft: "20px" }}
             onClick={handleDeleteClick}
           />
         </div>

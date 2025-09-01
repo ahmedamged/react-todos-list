@@ -1,4 +1,6 @@
 import React, { useState, useContext } from "react";
+import TextField from "@mui/material/TextField";
+import Button from "@mui/material/Button";
 import { todosContext } from "../contexts/TodosContext";
 import db from "../firebase";
 import { ref, update } from "firebase/database";
@@ -50,25 +52,51 @@ export const TodoEditModal = ({ todoUniqueId, setIsEditModalShown, title }) => {
         }}
       >
         <div
-          style={{ background: "white", padding: "50px", borderRadius: "20px" }}
+          style={{
+            background: "white",
+            padding: "50px",
+            borderRadius: "20px",
+            zIndex: "3",
+          }}
         >
           <h4 style={{ marginBottom: "50px" }}>Edit Todo Title</h4>
           <form onSubmit={handleEditFormSubmit}>
-            <input
-              type="text"
+            <TextField
+              label="Edit a Todo"
+              variant="outlined"
+              size="small"
+              helperText="Please edit your todo"
               value={todoEdit}
               onChange={(e) => setTodoEdit(e.target.value)}
               autoFocus
               style={{
-                padding: "10px",
-                borderRadius: "10px",
                 margin: "0 10px",
               }}
             />
-            <button onClick={handleEditClick} type="submit">
+            <Button
+              variant="contained"
+              className="main-btn"
+              onClick={handleEditClick}
+              type="submit"
+              style={{
+                background: "#a7d0d3",
+                color: "#000000",
+                marginRight: "10px",
+              }}
+            >
               Edit
-            </button>
-            <button onClick={handleCancelClick}>Cancel</button>
+            </Button>
+            <Button
+              variant="contained"
+              className="main-btn"
+              onClick={handleCancelClick}
+              style={{
+                background: "#a7d0d3",
+                color: "#000000",
+              }}
+            >
+              Cancel
+            </Button>
           </form>
         </div>
       </div>
