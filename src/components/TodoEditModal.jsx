@@ -71,7 +71,7 @@ export const TodoEditModal = ({ todoUniqueId, setIsEditModalShown, title }) => {
               onChange={(e) => setTodoEdit(e.target.value)}
               autoFocus
               style={{
-                margin: "0 10px",
+                margin: "0px 10px 20px",
               }}
             />
             <Button

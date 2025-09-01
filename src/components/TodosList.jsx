@@ -96,7 +96,6 @@ export const TodosList = () => {
             onChange={(e) => setTodoInput(e.target.value)}
             style={{
               margin: "0 10px",
-              minWidth: "400px",
             }}
           />
           <Button
