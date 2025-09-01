@@ -49,6 +49,7 @@ export const TodoEditModal = ({ todoUniqueId, setIsEditModalShown, title }) => {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
+          zIndex: "2",
         }}
       >
         <div
