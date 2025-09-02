@@ -1,15 +1,17 @@
-import React, { useState, useContext } from "react";
+import { useState, useContext } from "react";
 import CheckCircleOutlineOutlinedIcon from "@mui/icons-material/CheckCircleOutlineOutlined";
 import CheckCircleRoundedIcon from "@mui/icons-material/CheckCircleRounded";
 import EditRoundedIcon from "@mui/icons-material/EditRounded";
 import DeleteForeverRoundedIcon from "@mui/icons-material/DeleteForeverRounded";
 import { todosContext } from "../contexts/TodosContext";
+import { userIdContext } from "../contexts/UserIdContext";
 import { TodoEditModal } from "./TodoEditModal";
 import db from "../firebase";
 import { update, ref, remove } from "firebase/database";
 
-export const TodoElement = ({ todoUniqueId, title, isDoneFlag, userId }) => {
+export const TodoElement = ({ todoUniqueId, title, isDoneFlag }) => {
   const { todos, setTodos } = useContext(todosContext);
+  const { userId } = useContext(userIdContext);
   const [isDone, setIsDone] = useState(isDoneFlag);
   const [isEditModalShown, setIsEditModalShown] = useState(false);
 

@@ -1,18 +1,15 @@
-import React, { useState, useContext } from "react";
+import { useState, useContext } from "react";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import { todosContext } from "../contexts/TodosContext";
+import { userIdContext } from "../contexts/UserIdContext";
 import db from "../firebase";
 import { ref, update } from "firebase/database";
 
-export const TodoEditModal = ({
-  todoUniqueId,
-  setIsEditModalShown,
-  title,
-  userId,
-}) => {
+export const TodoEditModal = ({ todoUniqueId, setIsEditModalShown, title }) => {
   const [todoEdit, setTodoEdit] = useState(title);
   const { todos, setTodos } = useContext(todosContext);
+  const { userId } = useContext(userIdContext);
 
   const handleEditFormSubmit = (e) => {
     e.preventDefault();

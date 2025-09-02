@@ -1,12 +1,12 @@
-import React from "react";
 import Container from "@mui/material/Container";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import { TodoElement } from "./TodoElement";
 import { useState, useEffect } from "react";
 import { todosContext } from "../contexts/TodosContext";
+import { userIdContext } from "../contexts/UserIdContext";
 import db from "../firebase";
-import { ref, set, query, orderByChild, onValue } from "firebase/database";
+import { ref, set, onValue } from "firebase/database";
 import { v1 as uuidv1 } from "uuid";
 import { v4 as uuidv4 } from "uuid";
 
@@ -70,54 +70,56 @@ export const TodosList = () => {
   return (
     <>
       <todosContext.Provider value={{ todos, setTodos }}>
-        <Container
-          maxWidth="sm"
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          {todos.length >= 1 ? (
-            todos.map((todo) => (
-              <TodoElement
-                key={todo.id}
-                todoUniqueId={todo.id}
-                title={todo.todosTitle}
-                isDoneFlag={todo.isDone}
-                userId={userId}
-              />
-            ))
-          ) : (
-            <h2>Try to add a new todo to your todo list</h2>
-          )}
-        </Container>
-
-        <form onSubmit={handleFormSubmit} style={{ marginTop: "30px" }}>
-          <TextField
-            label="Add a Todo"
-            variant="outlined"
-            size="small"
-            helperText="Please enter your todo"
-            value={todoInput}
-            onChange={(e) => setTodoInput(e.target.value)}
+        <userIdContext.Provider value={{ userId }}>
+          <Container
+            maxWidth="sm"
             style={{
-              margin: "0 10px",
-            }}
-          />
-          <Button
-            variant="contained"
-            className="main-btn"
-            onClick={handleFormSubmit}
-            style={{
-              background: "#a7d0d3",
-              color: "#000000",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
             }}
           >
-            Add
-          </Button>
-        </form>
+            {todos.length >= 1 ? (
+              todos.map((todo) => (
+                <TodoElement
+                  key={todo.id}
+                  todoUniqueId={todo.id}
+                  title={todo.todosTitle}
+                  isDoneFlag={todo.isDone}
+                  userId={userId}
+                />
+              ))
+            ) : (
+              <h2>Try to add a new todo to your todo list</h2>
+            )}
+          </Container>
+
+          <form onSubmit={handleFormSubmit} style={{ marginTop: "30px" }}>
+            <TextField
+              label="Add a Todo"
+              variant="outlined"
+              size="small"
+              helperText="Please enter your todo"
+              value={todoInput}
+              onChange={(e) => setTodoInput(e.target.value)}
+              style={{
+                margin: "0 10px",
+              }}
+            />
+            <Button
+              variant="contained"
+              className="main-btn"
+              onClick={handleFormSubmit}
+              style={{
+                background: "#a7d0d3",
+                color: "#000000",
+              }}
+            >
+              Add
+            </Button>
+          </form>
+        </userIdContext.Provider>
       </todosContext.Provider>
     </>
   );
